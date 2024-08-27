@@ -1,0 +1,20 @@
+.container {
+    max-width: 960px;
+    margin-top: 30px;
+}
+
+.border-top { border-top: 1px solid #fecf3e; }
+.border-bottom { border-bottom: 1px solid #fecf3e; }
+.border-top-gray { border-top-color: #adb5bd; }
+
+.border {
+    border: 1px solid #fecf3e;
+    box-shadow:0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+
+.lh-condensed { line-height: 1.25; }
+
+label {
+    font-weight: bold;
+}
