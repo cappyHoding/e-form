@@ -1,6 +1,6 @@
 import {forwardRef} from "react";
 
-const ApplicationDetail = forwardRef((props) => {
+const ApplicationDetail = forwardRef((props, ref) => {
     return (
         <div className="row justify-content-md-center">
             <div className="col-md-10 order-md-1">
@@ -42,6 +42,19 @@ const ApplicationDetail = forwardRef((props) => {
                             <option value="Tabungan Hari Raya">Tabungan Hari Raya</option>
                             <option value="Simpanan Pelajar">Simpanan Pelajar</option>
                         </select>
+                    </div>
+
+                    {/* Interest */}
+                    <div className="mb-3">
+                        <label htmlFor="interest">Bunga Pinjaman</label>
+                        <input
+                            className="form-control d-block w-100 input-control"
+                            id="interest"
+                            type="number"
+                            value={props.values.interest}
+                            onChange={props.handleChange('interest')}
+                            readOnly
+                        />
                     </div>
                 </form>
             </div>
