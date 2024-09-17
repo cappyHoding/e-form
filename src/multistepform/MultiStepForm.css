@@ -110,8 +110,7 @@ input[type=file]::file-selector-button:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 300px;
-    padding: 20px;
+    height: 800px;
     border-radius: 10px;
     border: 2px dashed #555;
     color: #444;
@@ -146,6 +145,11 @@ input[type=file]::file-selector-button:hover {
 }
 
 .img-ktp {
-    max-width: 300px;
+    max-width: 500px;
     height: auto;
+}
+
+.btn-ktp {
+    position: absolute;
+    bottom: 30px;
 }

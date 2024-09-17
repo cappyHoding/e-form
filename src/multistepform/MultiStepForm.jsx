@@ -4,6 +4,7 @@ import PersonalInformation from "./PersonalInformation";
 import "./MultiStepForm.css"
 import ApplicationDetail from "./ApplicationDetail";
 import ImageVerification from "./ImageVerification";
+import IdVerification from "./IdVerification";
 
 const MultiStepForm = () => {
     const personalInfoState = {
@@ -25,9 +26,13 @@ const MultiStepForm = () => {
         productTypes: ''
     }
 
+
     const [step, setStep] = useState(1);
     const [personalInformation, setPersonalInformation] = useState(personalInfoState)
     const [tabunganInfo, setTabunganInfo] = useState(tabunganInfoState)
+    const [selfie, setSelfie] = useState(null)
+    const [idImage, setIdImage] = useState([])
+    // let selfie = "";
 
     const handleChange = (input) => (e) => {
         e.preventDefault()
@@ -37,7 +42,21 @@ const MultiStepForm = () => {
     const handleChangeTabungan = (input) => (e) => {
         e.preventDefault()
         setTabunganInfo({ ...tabunganInfo, [input]: e.target.value })
-        console.log(tabunganInfo)
+    }
+
+    const handleSelfie = async (image) => {
+        setSelfie(image)
+        buildRequest()
+    }
+
+    const handleIdImage = (e) => {
+        console.log(e)
+        // setIdImage(e.target.value)
+        // console.log(e.target.value)
+    }
+
+    const buildRequest = () => {
+        console.log(selfie)
     }
 
     const prevStep = () => {
@@ -50,7 +69,7 @@ const MultiStepForm = () => {
 
     return (
         <>
-            <div className="container border rounded">
+            <div className="container border rounded" style={{background: '#ffffff'}}>
                 <div className="py-5 text-center">
                     <h2>Formulir Pembukaan Tabungan</h2>
                     <hr/>
@@ -76,11 +95,18 @@ const MultiStepForm = () => {
                 }
 
                 {step === 3 &&
-                    <ImageVerification />
+                    <ImageVerification
+                        getImage={handleSelfie}
+                    />
                 }
+                {step ===4 &&
+                    <IdVerification
+                        getIdImage={handleIdImage}
+                    />
 
-                {step === 4 &&
-                    <div className="col-md-6 mb-3">
+                }
+                {step === 5 &&
+                    <div>
                         <button type="submit" className="btn btn-outline-secondary btn-lg w-100"
                                 onClick={prevStep}>
                             Kembali
@@ -88,7 +114,7 @@ const MultiStepForm = () => {
                     </div>
                 }
 
-                {step > 1 && step < 4 &&
+                {step > 1 && step < 5 &&
                     <>
                         <hr className="mb-4"/>
                         <div className="row">

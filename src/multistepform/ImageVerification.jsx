@@ -1,23 +1,28 @@
-import {forwardRef, useCallback, useRef, useState} from "react";
-import {useDropzone} from "react-dropzone";
+/* eslint-disable */
+
+import { useCallback, useRef, useState} from "react";
 import Webcam from "react-webcam";
+import icon from "./selfie-svgrepo-com.svg"
 
-const ImageVerification = forwardRef((props, ref) => {
-    const [uploadedImage, setUploadedImage] = useState([]);
+const FACING_MODE_USER = "user"
+const FACING_MODE_ENVIRONMENT = "environment"
+const videoConstraints = {
+    facingMode: FACING_MODE_USER
+}
+
+const ImageVerification = ({getImage}) => {
     const [selfieImage, setSelfieImage] = useState(null);
-    const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
-        acceptedFiles.forEach((acceptedFile) => {
-            setUploadedImage((prevState) => [...prevState, acceptedFile]);
-        });
-    }, [])
+    const [readyToPhoto, setReadyToPhoto] = useState(false);
+    const [facingMode, setFacingMode] = useState(FACING_MODE_USER);
 
-    const {
-        getRootProps,
-        getInputProps,
-        isDragActive,
-        isDragAccept,
-        isDragReject,
-    } = useDropzone({ onDrop, accept: "image/*", maxFiles: 2});
+    const camRef = useRef(null);
+
+    // create a capture function
+    const capture = useCallback(async () => {
+        const imageSrc = camRef.current.getScreenshot();
+        await setSelfieImage(imageSrc);
+        getImage(imageSrc);
+    }, [camRef]);
 
     const removePhoto = (input) => (event) => {
         event.preventDefault()
@@ -28,66 +33,76 @@ const ImageVerification = forwardRef((props, ref) => {
         }
     }
 
-    const camRef = useRef(null);
+    const changeCamera = useCallback(() => {
+        setFacingMode(
+            prevState => prevState === FACING_MODE_USER
+                ? FACING_MODE_ENVIRONMENT
+                : FACING_MODE_USER
+        )
+    }, [])
 
-    // create a capture function
-    const capture = useCallback(() => {
-        const imageSrc = camRef.current.getScreenshot();
-        setSelfieImage(imageSrc);
-    }, [camRef]);
+
+
+    const handleReadyToPhoto = (event) => {
+        event.preventDefault();
+        setReadyToPhoto(!readyToPhoto);
+    }
 
     return (
         <div className="row justify-content-md-center">
-            <div className="mb-3">
+            <div className="justify-content-md-center">
                 <h5 className="mb-3">Foto Diri (Selfie)</h5>
-                <div className="drop-container">
-                    {selfieImage ? (
-                        <>
-                            <div className="row">
-                                <img className="img-ktp" src={selfieImage} alt=""/>
-                            </div>
-                            <button className="btn btn-outline-danger btn-lg w-20" onClick={removePhoto("selfie")}>Ganti
-                                Foto
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            <Webcam width={300} height={300} ref={camRef} mirrored={true} />
-                            <button className="btn btn-outline-success" onClick={capture}>Capture photo</button>
-                        </>
-                    )
-
-                    }
-                </div>
-
-            </div>
-
-            <div className="mb-3">
-                <h5 className="mb-3">Foto KTP</h5>
-                {uploadedImage.length === 0 &&
-                    <div className="drop-container" {...getRootProps()}>
-                        <input {...getInputProps()} />
-                        {isDragActive ? (
-                            <span className="drop-title">Upload Foto KTP</span>
+                {readyToPhoto ? (
+                    <div className="drop-container">
+                        {selfieImage ? (
+                            <>
+                                <div className="row">
+                                    <img className="img-ktp" src={selfieImage} alt=""/>
+                                </div>
+                                <button className="btn btn-outline-danger btn-lg w-20 btn-ktp"
+                                        onClick={removePhoto("selfie")}>
+                                    <i className="bi bi-repeat"></i>
+                                    <span> Ganti Foto</span>
+                                </button>
+                            </>
                         ) : (
-                            <p>Drag and drop file(s) here, or click to select files</p>
-                        )}
+                            <>
+                                <div className="row">
+                                    <Webcam
+                                        height={650}
+                                        ref={camRef}
+                                        mirrored={true}
+                                        screenshotFormat="image/png"
+                                        audio={false}
+                                        videoConstraints={{...videoConstraints, facingMode}}
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                        <button className="btn btn-outline-success btn-lg" onClick={capture} style={{marginRight: 10}}>
+                                            <i className="bi bi-camera2"/>
+                                        </button>
+                                        <button className="btn btn-outline-secondary btn-lg" onClick={changeCamera}>
+                                            <i className="bi bi-arrow-repeat" />
+                                        </button>
+                                </div>
+                            </>
+                        )
+
+                        }
                     </div>
-                }
-                {uploadedImage.length > 0 &&
-                    uploadedImage.map((image, i) => (
-                        <div className="drop-container">
-                            <div className="row">
-                                <img className="img-ktp"
-                                     src={`${URL.createObjectURL(image)}`} key={i} alt=""/>
-                            </div>
-                            <button className="btn btn-outline-danger btn-lg w-20" onClick={removePhoto("ktp")}>Ganti Foto</button>
+                ) : (
+                    <div className="drop-container" onClick={handleReadyToPhoto}>
+                        <div className="row">
+                            <img src={icon} height={400} width={400} alt=""/>
                         </div>
-                    ))
-                }
+                        <div className="mb-3">
+                            <p>Klik Disini untuk mengaktifkan Kamera Anda</p>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )
-})
+}
 
 export default ImageVerification
