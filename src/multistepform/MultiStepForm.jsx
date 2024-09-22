@@ -2,10 +2,12 @@ import {useState} from "react";
 import PersonalInformation from "./PersonalInformation";
 
 import "./MultiStepForm.css"
+import Knowledgement from "./Knowledgement";
 import ApplicationDetail from "./ApplicationDetail";
 import ImageVerification from "./ImageVerification";
 import IdVerification from "./IdVerification";
-
+import Header from "../components/header/Header";
+import Footer from "../components/footer/Footer";
 const MultiStepForm = () => {
     const personalInfoState = {
         fullName: '',
@@ -26,13 +28,23 @@ const MultiStepForm = () => {
         productTypes: ''
     }
 
+    const tc = {
+        tc1: false,
+        tc2: false
+    }
 
-    const [step, setStep] = useState(1);
+    const [agreement, setAgreement] = useState(tc)
+    const [step, setStep] = useState(0);
     const [personalInformation, setPersonalInformation] = useState(personalInfoState)
     const [tabunganInfo, setTabunganInfo] = useState(tabunganInfoState)
     const [selfie, setSelfie] = useState(null)
     const [idImage, setIdImage] = useState([])
     // let selfie = "";
+
+    const handleChangeAgreement = (input) => (e) => {
+        e.preventDefault()
+        setAgreement({...agreement, [input]: !agreement[input] })
+    }
 
     const handleChange = (input) => (e) => {
         e.preventDefault()
@@ -69,43 +81,60 @@ const MultiStepForm = () => {
 
     return (
         <>
-            <div className="container border rounded" style={{background: '#ffffff'}}>
-                <div className="py-5 text-center">
-                    <h2>Formulir Pembukaan Tabungan</h2>
-                    <hr/>
-                </div>
-                {step === 1 &&
+            <Header />
+            <div className="container border rounded">
+                {step === 0 &&
+                    <div>
+                        <Knowledgement
+                            handleChange={handleChangeAgreement}
+                            values={agreement}
+                        />
+                        <hr className="mb-4"/>
+                        <button type="submit"
+                                disabled={!agreement.tc1 && !agreement.tc2}
+                                className="btn btn-outline-success btn-lg w-100"
+                                onClick={nextStep}>
+                            Mulai
+                        </button>
+                    </div>
+                }
+                {step === 4 &&
                     <>
                         <PersonalInformation
                             handleChange={handleChange}
                             values={personalInformation}
                         />
-                        <hr className="mb-4"/>
-                        <button type="submit" className="btn btn-outline-primary btn-lg w-100" onClick={nextStep}>
-                            Selanjutnya
-                        </button>
                     </>
 
                 }
-                {step === 2 &&
-                    <ApplicationDetail
-                        handleChange={handleChangeTabungan}
-                        values={tabunganInfo}
-                    />
+                {step === 1 &&
+                    <>
+                        <ApplicationDetail
+                            handleChange={handleChangeTabungan}
+                            values={tabunganInfo}
+                        />
+                        <hr className="mb-4"/>
+                        <button type="submit"
+                                disabled={!agreement.tc1 && !agreement.tc2}
+                                className="btn btn-outline-primary btn-lg w-100"
+                                onClick={nextStep}>
+                            Selanjutnya
+                        </button>
+                    </>
                 }
 
-                {step === 3 &&
+                {step === 2 &&
                     <ImageVerification
                         getImage={handleSelfie}
                     />
                 }
-                {step ===4 &&
+                {step ===3 &&
                     <IdVerification
                         getIdImage={handleIdImage}
                     />
 
                 }
-                {step === 5 &&
+                {step === 10 &&
                     <div>
                         <button type="submit" className="btn btn-outline-secondary btn-lg w-100"
                                 onClick={prevStep}>
@@ -135,6 +164,7 @@ const MultiStepForm = () => {
                 }
 
             </div>
+            <Footer />
         </>
     )
 }

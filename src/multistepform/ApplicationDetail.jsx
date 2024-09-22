@@ -3,8 +3,11 @@ import {forwardRef} from "react";
 const ApplicationDetail = forwardRef((props, ref) => {
     return (
         <div className="row justify-content-md-center">
+            <div className="py-5 text-center">
+                <h2>Produk dan Nominal Tabungan</h2>
+                <hr/>
+            </div>
             <div className="col-md-10 order-md-1">
-                <h4 className="mb-3">Detail Pembukaan Tabungan</h4>
                 <form className="needs-validation" noValidate>
                     {/*  Saldo Tabungan  */}
                     <div className="mb-3">

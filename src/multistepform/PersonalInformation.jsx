@@ -3,8 +3,11 @@ import { forwardRef } from "react";
 const PersonalInformation = forwardRef(( props, ref ) => {
     return (
         <div className="row justify-content-md-center">
+            <div className="py-5 text-center">
+                <h2>Data Diri</h2>
+                <hr/>
+            </div>
             <div className="col-md-10 order-md-1">
-                <h4 className="mb-3">Data Pribadi</h4>
                 <form className="needs-validation" noValidate>
                     {/* Full Name */}
                     <div className="mb-3">

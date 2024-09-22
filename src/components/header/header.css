@@ -1,0 +1,14 @@
+.jumbo-header {
+    background: rgb(254,207,62);
+    background: linear-gradient(139deg, rgba(254,207,62,1) 37%, rgba(175,30,40,1) 66%, rgba(125,19,30,1) 100%);
+    height: 120px;
+    margin-top: 0;
+}
+
+
+.title {
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: x-large;
+    margin-right: 20px;
+}
